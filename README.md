@@ -1,2 +1,2 @@
-# lsdm-backend
+# Backend
 Backend repository
