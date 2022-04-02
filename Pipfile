@@ -7,8 +7,12 @@ name = "pypi"
 flask = "*"
 python-dotenv = "*"
 pytest = "*"
+flask-sqlalchemy = "*"
+pymysql = "*"
+mysqldbmodel = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3"
