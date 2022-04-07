@@ -4,7 +4,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
-from app.routes.data import data as data_blueprint
+from app.routes.data_route import data as data_blueprint
 
 load_dotenv()
 
