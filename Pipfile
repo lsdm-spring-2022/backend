@@ -10,6 +10,7 @@ pytest = "*"
 flask-sqlalchemy = "*"
 pymysql = "*"
 mysqldbmodel = "*"
+cryptography = "*"
 
 [dev-packages]
 autopep8 = "*"

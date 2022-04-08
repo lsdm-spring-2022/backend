@@ -1,24 +1,36 @@
 from flask import Blueprint, jsonify, make_response, request
 from app.services.data_service import get_social_media_data
-from app.constants.response_codes import HTTP_OK
+from app.constants.response_codes import HTTP_BAD_REQUEST
+from app.utilities.request_util import validate_social_media_get_request
 
 data = Blueprint('data', __name__)
 
 
 @data.route('/api/data', methods=['GET'])
-def hello_data():
+def get_data():
     args = request.args
-    # TODO Validate use input
-    country = args.get('country')
-    date = args.get('date')
-    source = args.get('source')
+    region = args.get('region')
+    start_date = args.get('startDate')
+    end_date = args.get('endDate')
+    reddit = args.get('reddit')
+    twitter = args.get('twitter')
 
-    data = get_social_media_data(country, date, source)
-    response = make_response(
-        jsonify(
-            data
-        ),
-        HTTP_OK,
+    missing_parameters = validate_social_media_get_request(region, start_date, end_date, reddit, twitter)
+
+    if len(missing_parameters) > 0:
+        response = make_response(
+            jsonify(
+                {
+                    'message': 'Missing parameters: ' + ', '.join(missing_parameters)
+                }
+            ),
+            HTTP_BAD_REQUEST,
+        )
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    social_media_data = get_social_media_data(region, start_date, end_date, reddit, twitter)
+    return jsonify(
+        reddit=social_media_data[0],
+        twitter=social_media_data[1]
     )
-    response.headers['Content-Type'] = 'application/json'
-    return response
