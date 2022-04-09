@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 flask = "*"
 python-dotenv = "*"
-pytest = "*"
 flask-sqlalchemy = "*"
 pymysql = "*"
 mysqldbmodel = "*"
@@ -14,6 +13,8 @@ cryptography = "*"
 
 [dev-packages]
 autopep8 = "*"
+pytest-mock = "*"
+pytest = "*"
 
 [requires]
 python_version = "3"
