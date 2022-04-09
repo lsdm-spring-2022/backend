@@ -10,11 +10,11 @@ flask-sqlalchemy = "*"
 pymysql = "*"
 mysqldbmodel = "*"
 cryptography = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [dev-packages]
 autopep8 = "*"
-pytest-mock = "*"
-pytest = "*"
 
 [requires]
 python_version = "3"
