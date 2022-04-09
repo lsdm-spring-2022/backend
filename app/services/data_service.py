@@ -1,5 +1,5 @@
 import logging
-from app.repositories.data_repository import get_reddit_data_by_region_and_date
+from app.repositories.data_repository import get_reddit_data_by_region_and_date, get_twitter_data_by_region_and_date
 from distutils.util import strtobool
 
 
@@ -31,7 +31,11 @@ def get_reddit_data(region: str, start_date: str, end_date: str):
 
 def get_twitter_data(region: str, start_date: str, end_date: str):
     twitter_data = []
-    db_data = []
+    db_data = get_twitter_data_by_region_and_date(region, start_date, end_date)
     if db_data is not None:
-        twitter_data = []
+        for item in db_data:
+            data_dict = {'datePosted': str(item.date_posted), 'region': item.region, 'tweet': item.tweet,
+                         'likes': item.likes, 'retweets': item.retweets, 'dateStored': str(item.date_stored),
+                         'comments': item.comments}
+            twitter_data.append(data_dict)
     return twitter_data
