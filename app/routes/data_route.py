@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, make_response, request
 from app.services.data_service import get_social_media_data
-from app.constants.response_codes import HTTP_BAD_REQUEST
+from app.constants.response_codes import HTTP_BAD_REQUEST, HTTP_SERVER_ERROR
 from app.utilities.request_util import validate_social_media_get_request
 
 data = Blueprint('data', __name__)
@@ -29,8 +29,19 @@ def get_data():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    social_media_data = get_social_media_data(region, start_date, end_date, reddit, twitter)
-    return jsonify(
-        reddit=social_media_data[0],
-        twitter=social_media_data[1]
-    )
+    try:
+        social_media_data = get_social_media_data(region, start_date, end_date, reddit, twitter)
+        return jsonify(
+            reddit=social_media_data[0],
+            twitter=social_media_data[1]
+        )
+    except Exception as e:
+        response = make_response(
+            jsonify(
+                {
+                    'message': str(e)
+                }
+            ),
+            HTTP_SERVER_ERROR
+        )
+        return response

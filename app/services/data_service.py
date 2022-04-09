@@ -10,32 +10,44 @@ def get_social_media_data(region: str, start_date: str, end_date: str, reddit: s
                   f'{reddit_bool}, twitter {twitter_bool}')
     reddit_data = []
     twitter_data = []
-    if reddit_bool:
-        reddit_data = get_reddit_data(region, start_date, end_date)
-    if twitter_bool:
-        twitter_data = get_twitter_data(region, start_date, end_date)
-    return reddit_data, twitter_data
+    try:
+        if reddit_bool:
+            reddit_data = get_reddit_data(region, start_date, end_date)
+        if twitter_bool:
+            twitter_data = get_twitter_data(region, start_date, end_date)
+        return reddit_data, twitter_data
+    except Exception as e:
+        logging.error(e)
+        raise Exception(str(e))
 
 
 def get_reddit_data(region: str, start_date: str, end_date: str):
-    reddit_data = []
-    db_data = get_reddit_data_by_region_and_date(region, start_date, end_date)
-    if db_data is not None:
-        for item in db_data:
-            data_dict = {'datePosted': str(item.date_posted), 'region': item.region, 'subreddit': item.subreddit,
-                         'postTitle': item.post_title, 'upvotes': item.upvotes, 'dateStored': str(item.date_stored),
-                         'comments': item.comments}
-            reddit_data.append(data_dict)
-    return reddit_data
+    try:
+        reddit_data = []
+        db_data = get_reddit_data_by_region_and_date(region, start_date, end_date)
+        if db_data is not None:
+            for item in db_data:
+                data_dict = {'datePosted': str(item.date_posted), 'region': item.region, 'subreddit': item.subreddit,
+                             'postTitle': item.post_title, 'upvotes': item.upvotes, 'dateStored': str(item.date_stored),
+                             'comments': item.comments}
+                reddit_data.append(data_dict)
+        return reddit_data
+    except Exception as e:
+        logging.error(e)
+        raise Exception(str(e))
 
 
 def get_twitter_data(region: str, start_date: str, end_date: str):
-    twitter_data = []
-    db_data = get_twitter_data_by_region_and_date(region, start_date, end_date)
-    if db_data is not None:
-        for item in db_data:
-            data_dict = {'datePosted': str(item.date_posted), 'region': item.region, 'tweet': item.tweet,
-                         'likes': item.likes, 'retweets': item.retweets, 'dateStored': str(item.date_stored),
-                         'comments': item.comments}
-            twitter_data.append(data_dict)
-    return twitter_data
+    try:
+        twitter_data = []
+        db_data = get_twitter_data_by_region_and_date(region, start_date, end_date)
+        if db_data is not None:
+            for item in db_data:
+                data_dict = {'datePosted': str(item.date_posted), 'region': item.region, 'tweet': item.tweet,
+                             'likes': item.likes, 'retweets': item.retweets, 'dateStored': str(item.date_stored),
+                             'comments': item.comments}
+                twitter_data.append(data_dict)
+        return twitter_data
+    except Exception as e:
+        logging.error(e)
+        raise Exception(str(e))
