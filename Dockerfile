@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 
 WORKDIR /app
 
-COPY requirements.txt app.py .env /app/
+COPY requirements.txt app.py /app/
 
 COPY app/ /app/app/
 
