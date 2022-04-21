@@ -3,7 +3,6 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
-from flask_cors import CORS
 
 from app.routes.data_route import data as data_blueprint
 
@@ -23,5 +22,4 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.register_blueprint(data_blueprint)
     db.init_app(app)
-    cors = CORS(app, origins="*")
     return app
