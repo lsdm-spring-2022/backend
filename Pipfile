@@ -12,6 +12,7 @@ mysqldbmodel = "*"
 cryptography = "*"
 pytest = "*"
 pytest-mock = "*"
+flask-cors = "*"
 
 [dev-packages]
 autopep8 = "*"
