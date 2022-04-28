@@ -5,10 +5,8 @@ db = SQLAlchemy()
 
 class TwitterModel(db.Model):
     __tablename__ = 'twitter'
-    date_posted = db.Column(db.Integer, primary_key=True)
-    region = db.Column(db.String(50))
-    tweet = db.Column(db.String(280), primary_key=True)
-    likes = db.Column(db.Integer)
-    retweets = db.Column(db.Integer)
-    date_stored = db.Column(db.String(45))
-    comments = db.Column(db.Integer)
+    country = db.Column(db.String(50), primary_key=True)
+    created_at = db.Column(db.String)
+    trend = db.Column(db.String(100), primary_key=True)
+    tweet_volume = db.Column(db.Integer)
+    as_of = db.Column(db.String)

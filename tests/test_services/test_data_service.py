@@ -20,20 +20,18 @@ test_reddit_data = [
 
 
 class TestTwitterModel:
-    def __init__(self, date_posted, region, tweet, likes, retweets, date_stored, comments):
-        self.date_posted = date_posted
-        self.region = region
-        self.tweet = tweet
-        self.likes = likes
-        self.retweets = retweets
-        self.date_stored = date_stored
-        self.comments = comments
+    def __init__(self, country, created_at, trend, tweet_volume, as_of):
+        self.country = country
+        self.created_at = created_at
+        self.trend = trend
+        self.tweet_volume = tweet_volume
+        self.as_of = as_of
 
 
 test_twitter_data = [
-    TestTwitterModel('2011-08-23 14:11:09', 'US', 'first test tweet', 3, 30, '2011-08-23 14:11:09', 300),
-    TestTwitterModel('2011-08-23 14:11:09', 'US', 'second test tweet', 2, 20, '2011-08-23 14:11:09', 200),
-    TestTwitterModel('2011-08-23 14:11:09', 'US', 'third test tweet', 1, 10, '2011-08-23 14:11:09', 100),
+    TestTwitterModel('United States', '2011-08-23 14:11:09', 'first test trend', 30, '2011-08-23 14:11:09'),
+    TestTwitterModel('United States', '2011-08-23 14:11:09', 'second test trend', 30, '2011-08-23 14:11:09'),
+    TestTwitterModel('United States', '2011-08-23 14:11:09', 'third test trend', 30, '2011-08-23 14:11:09'),
 ]
 
 test_reddit_dict = [
@@ -69,7 +67,7 @@ test_reddit_dict = [
 
 def test_get_reddit_data_no_data(mocker):
     mocker.patch('app.services.data_service.get_reddit_data_by_region_and_date', return_value=[])
-    response = get_reddit_data('US', '2022-04-09', '2022-04-10')
+    response = get_reddit_data('US', '2022-04-09', '2022-04-10', 10)
 
     assert response == []
 
@@ -78,14 +76,14 @@ def test_get_reddit_data_exception(mocker):
     mocker.patch('app.services.data_service.get_reddit_data_by_region_and_date',
                  side_effect=Exception('No connection to database'))
     try:
-        get_reddit_data('US', '2022-04-09', '2022-04-10')
+        get_reddit_data('US', '2022-04-09', '2022-04-10', 10)
     except Exception as e:
         assert str(e) == 'No connection to database'
 
 
 def test_get_reddit_valid_data(mocker):
     mocker.patch('app.services.data_service.get_reddit_data_by_region_and_date', return_value=test_reddit_data)
-    response = get_reddit_data('US', '2022-04-09', '2022-04-10')
+    response = get_reddit_data('US', '2022-04-09', '2022-04-10', 10)
 
     assert response == [
         {'datePosted': '2011-08-23 14:11:09', 'region': 'US', 'subreddit': 'world', 'postTitle': 'test post title 3',
@@ -98,7 +96,7 @@ def test_get_reddit_valid_data(mocker):
 
 def test_get_twitter_data_no_data(mocker):
     mocker.patch('app.services.data_service.get_twitter_data_by_region_and_date', return_value=[])
-    response = get_twitter_data('US', '2022-04-09', '2022-04-10')
+    response = get_twitter_data('US', '2022-04-09', '2022-04-10', 10)
 
     assert response == []
 
@@ -107,28 +105,25 @@ def test_get_twitter_data_exception(mocker):
     mocker.patch('app.services.data_service.get_twitter_data_by_region_and_date',
                  side_effect=Exception('No connection to database'))
     try:
-        get_twitter_data('US', '2022-04-09', '2022-04-10')
+        get_twitter_data('US', '2022-04-09', '2022-04-10', 10)
     except Exception as e:
         assert str(e) == 'No connection to database'
 
 
 def test_get_twitter_valid_data(mocker):
     mocker.patch('app.services.data_service.get_twitter_data_by_region_and_date', return_value=test_twitter_data)
-    response = get_twitter_data('US', '2022-04-09', '2022-04-10')
+    response = get_twitter_data('US', '2022-04-09', '2022-04-10', 10)
 
-    assert response == [
-        {'datePosted': '2011-08-23 14:11:09', 'region': 'US', 'tweet': 'first test tweet', 'likes': 3, 'retweets': 30,
-         'dateStored': '2011-08-23 14:11:09', 'comments': 300},
-        {'datePosted': '2011-08-23 14:11:09', 'region': 'US', 'tweet': 'second test tweet', 'likes': 2, 'retweets': 20,
-         'dateStored': '2011-08-23 14:11:09', 'comments': 200},
-        {'datePosted': '2011-08-23 14:11:09', 'region': 'US', 'tweet': 'third test tweet', 'likes': 1, 'retweets': 10,
-         'dateStored': '2011-08-23 14:11:09', 'comments': 100}]
+    assert response == [{'dateTrendStarted': '2011-08-23 14:11:09', 'region': 'United States', 'trend': 'first test '
+                                                                                                        'trend',
+                         'tweetVolume': 30, 'dateRetrieved': '2011-08-23 14:11:09'}, {'dateTrendStarted': '2011-08-23'
+                                                                                                          ' 14:11:09', 'region': 'United States', 'trend': 'second test trend', 'tweetVolume': 30, 'dateRetrieved': '2011-08-23 14:11:09'}, {'dateTrendStarted': '2011-08-23 14:11:09', 'region': 'United States', 'trend': 'third test trend', 'tweetVolume': 30, 'dateRetrieved': '2011-08-23 14:11:09'}]
 
 
 def test_get_social_media_data_no_data(mocker):
     mocker.patch('app.services.data_service.get_reddit_data', return_value=[])
     mocker.patch('app.services.data_service.get_twitter_data', return_value=[])
-    response = get_social_media_data('US', '2011-08-20', '2011-08-25', 'true', 'true')
+    response = get_social_media_data('US', '2011-08-20', '2011-08-25', 'true', 'true', '10')
 
     assert response == ([], [])
 
@@ -137,7 +132,7 @@ def test_get_social_media_data_exception(mocker):
     mocker.patch('app.services.data_service.get_reddit_data', side_effect=Exception('No connection to database'))
     mocker.patch('app.services.data_service.get_twitter_data', side_effect=Exception('No connection to database'))
     try:
-        get_social_media_data('US', '2011-08-20', '2011-08-25', 'true', 'true')
+        get_social_media_data('US', '2011-08-20', '2011-08-25', 'true', 'true', '10')
     except Exception as e:
         assert str(e) == 'No connection to database'
 
@@ -145,6 +140,6 @@ def test_get_social_media_data_exception(mocker):
 def test_get_social_media_data_valid_data(mocker):
     mocker.patch('app.services.data_service.get_reddit_data', return_value=test_reddit_dict)
     mocker.patch('app.services.data_service.get_twitter_data', return_value=[])
-    response = get_social_media_data('US', '2011-08-20', '2011-08-25', 'true', 'true')
+    response = get_social_media_data('US', '2011-08-20', '2011-08-25', 'true', 'true', '10')
 
     assert response == (test_reddit_dict, [])

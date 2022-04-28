@@ -10,4 +10,6 @@ RUN apt-get update && apt-get install -y python3-pip
 
 RUN pip install -r requirements.txt
 
-CMD ["python3", "app.py"]
+ENV FLASK_ENV production
+
+CMD ["flask", "run", "--host", "0.0.0.0", "--port", "5001"]

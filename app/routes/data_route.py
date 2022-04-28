@@ -14,8 +14,13 @@ def get_data():
     end_date = args.get('endDate')
     reddit = args.get('reddit')
     twitter = args.get('twitter')
+    limit = args.get('limit')
 
-    missing_parameters = validate_social_media_get_request(region, start_date, end_date, reddit, twitter)
+    if limit is None:
+        limit = 50
+
+    missing_parameters = validate_social_media_get_request(
+        region, start_date, end_date, reddit, twitter)
 
     if len(missing_parameters) > 0:
         response = make_response(
@@ -30,7 +35,8 @@ def get_data():
         return response
 
     try:
-        social_media_data = get_social_media_data(region, start_date, end_date, reddit, twitter)
+        social_media_data = get_social_media_data(
+            region, start_date, end_date, reddit, twitter, limit)
         return jsonify(
             reddit=social_media_data[0],
             twitter=social_media_data[1]
