@@ -25,13 +25,16 @@ def get_social_media_data(region: str, start_date: str, end_date: str, reddit: s
 
 
 def get_reddit_data(region: str, start_date: str, end_date: str, limit: int):
+    old_region = region
+    if region == 'unitedstates':
+        region = 'popular'
     try:
         reddit_data = []
         db_data = get_reddit_data_by_region_and_date(
             region, start_date, end_date, limit)
         if db_data is not None:
             for item in db_data:
-                data_dict = {'datePosted': str(item.date_posted), 'region': item.region, 'subreddit': item.subreddit,
+                data_dict = {'datePosted': str(item.date_posted), 'region': old_region, 'subreddit': item.subreddit,
                              'postTitle': item.post_title, 'upvotes': item.upvotes, 'dateStored': str(item.date_stored),
                              'comments': item.comments}
                 reddit_data.append(data_dict)
